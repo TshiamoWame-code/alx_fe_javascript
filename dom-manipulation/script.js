@@ -30,6 +30,25 @@ function populateCategories() {
   });
 }
 
+// Display quotes filtered by category
+function filterQuote() {
+  const selected = categoryFilter.value;
+  localStorage.setItem('selectedCategory', selected);
+  const filtered = selected === "all" ? quotes : quotes.filter(q => q.category === selected);
+  displayQuotes(filtered);
+}
+
+// Render quotes on the page
+function displayQuotes(quoteList) {
+  quoteDisplay.innerHTML = "";
+  quoteList.forEach(q => {
+    const div = document.createElement("div");
+    div.className = "quote";
+    div.innerHTML = `<strong>${q.category}:</strong> ${q.text}`;
+    quoteDisplay.appendChild(div);
+  });
+}
+
 // Function to show a random quote
 function showRandomQuote() {
     const quoteBox = document.getElementById("quoteBox");
