@@ -192,7 +192,7 @@ async function syncQuotes() {
   const serverQuotes = await fetchQuotesFromServer();
   const mergedQuotes = resolveConflicts(quotes, serverQuotes);
   updateLocalStorage(mergedQuotes);
-  notify("Quotes synced with server.");
+  notify("Quotes synced with server!");
 }
 
 // Periodic sync every 60 seconds
