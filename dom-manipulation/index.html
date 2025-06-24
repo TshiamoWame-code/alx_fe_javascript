@@ -22,4 +22,12 @@
   <br>
   <button id="exportBtn">Export Quotes</button>
   </body>
+  <form onsubmit="addQuote(event)">
+  <input type="text" id="newQuoteText" placeholder="Enter quote" required />
+  <input type="text" id="newQuoteCategory" placeholder="Enter category" required />
+  <button type="submit">Add Quote</button>
+</form>
+
+<div id="quoteDisplay"></div>
+
   </html>

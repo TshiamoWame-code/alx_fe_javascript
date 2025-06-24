@@ -132,3 +132,95 @@ function importFromJsonFile(event) {
     };
     fileReader.readAsText(event.target.files[0]);
   }
+
+  const API_URL = "https://example.com/api/quotes";
+let = JSON.parse(localStorage.getItem("quotes")) || [];
+
+// Fetch from server
+async function fetchQuotesFromServer() {
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("Failed to fetch");
+    const serverQuotes = await res.json();
+    return serverQuotes;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return [];
+  }
+}
+
+// Post a quote to server
+async function postQuoteToServer(quote) {
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(quote),
+    });
+    console.log("Posted to server:", quote);
+  } catch (error) {
+    console.error("Post error:", error);
+  }
+}
+
+// Conflict resolution: latest `updatedAt` wins
+function resolveConflicts(local, server) {
+  const merged = [...local];
+  server.forEach(serverQuote => {
+    const index = merged.findIndex(q => q.id === serverQuote.id);
+    if (index === -1) {
+      merged.push(serverQuote); // New from server
+    } else {
+      const localQuote = merged[index];
+      if (new Date(serverQuote.updatedAt) > new Date(localQuote.updatedAt)) {
+        merged[index] = serverQuote; // Server wins
+      }
+    }
+  });
+  return merged;
+}
+
+// Save to localStorage and re-render
+function updateLocalStorage(updatedQuotes) {
+  quotes = updatedQuotes;
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+  displayQuotes(quotes);
+}
+
+// Sync quotes from server with local
+async function syncQuotes() {
+  const serverQuotes = await fetchQuotesFromServer();
+  const mergedQuotes = resolveConflicts(quotes, serverQuotes);
+  updateLocalStorage(mergedQuotes);
+  notify("Quotes synced with server.");
+}
+
+// Periodic sync every 60 seconds
+setInterval(syncQuotes, 60000);
+
+// Add new quote
+async function addQuote(event) {
+  event.preventDefault();
+  const text = document.getElementById("newQuoteText").value.trim();
+  const category = document.getElementById("newQuoteCategory").value.trim();
+  const newQuote = {
+    id: Date.now().toString(),
+    text,
+    category,
+    updatedAt: new Date().toISOString()
+  };
+
+  quotes.push(newQuote);
+  updateLocalStorage(quotes);
+  await postQuoteToServer(newQuote);
+  notify("Quote added and posted to server.");
+}
+
+// Simple notification
+function notify(message) {
+  const div = document.createElement("div");
+  div.textContent = message;
+  div.style = "background: #dff0d8; padding: 10px; margin: 10px 0;";
+  document.body.insertBefore(div, document.body.firstChild);
+  setTimeout(() => div.remove(), 3000);
+}
