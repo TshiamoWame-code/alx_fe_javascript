@@ -12,6 +12,12 @@ function saveQuotes() {
 
 document.getElementById("exportBtn").addEventListener("click", exportQuotes);
 
+function exportQuotes() {
+    const dataStr = JSON.stringify(quotes, null, 2); // Pretty JSON
+    const blob = new Blob([dataStr], { type: "application/json" }); // Create file-like object
+    const url = URL.createObjectURL(blob); // Generate a download link
+}
+
 // Function to show a random quote
 function showRandomQuote() {
     const quoteBox = document.getElementById("quoteBox");
