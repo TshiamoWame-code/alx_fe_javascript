@@ -10,6 +10,8 @@ function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
+document.getElementById("exportBtn").addEventListener("click", exportQuotes);
+
 // Function to show a random quote
 function showRandomQuote() {
     const quoteBox = document.getElementById("quoteBox");
