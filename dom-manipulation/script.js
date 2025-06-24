@@ -5,6 +5,11 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
     { text: "Life is what happens when you're busy making other plans.", category: "Life" }
 ];
 
+// Save quotes to localStorage
+function saveQuotes() {
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+}
+
 // Function to show a random quote
 function showRandomQuote() {
     const quoteBox = document.getElementById("quoteBox");
