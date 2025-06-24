@@ -25,7 +25,7 @@ function createAddQuoteForm() {
     form.id = "addQuoteForm";
 
     const quoteLabel = document.createElement("label");
-    quoteLabel.innerHTML = "Quote:";
+    quoteLabel.innerText = "Quote:";
     const quoteInput = document.createElement("input");
     quoteInput.type = "text";
     quoteInput.required = true;
@@ -78,3 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshBtn.addEventListener("click", showRandomQuote);
     }
 });
+function importFromJsonFile(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(event) {
+      const importedQuotes = JSON.parse(event.target.result);
+      quotes.push(...importedQuotes);
+      saveQuotes();
+      alert('Quotes imported successfully!');
+    };
+    fileReader.readAsText(event.target.files[0]);
+  }
