@@ -133,7 +133,7 @@ function importFromJsonFile(event) {
     fileReader.readAsText(event.target.files[0]);
   }
 
-  const API_URL = "https://example.com/api/quotes";
+  const API_URL = "https://jsonplaceholder.typicode.com/posts";
 let = JSON.parse(localStorage.getItem("quotes")) || [];
 
 // Fetch from server
